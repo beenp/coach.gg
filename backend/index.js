@@ -14,6 +14,10 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 app.use('/api/users', userRoutes);
 
+// Google routes
+const calendarRoutes = require('./routes/calendar');
+app.use('/api/calendar', calendarRoutes);
+
 // Mount Routes
 app.use('/api/auth', authRoutes);
 
