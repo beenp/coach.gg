@@ -1,4 +1,3 @@
-// backend/index.js
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
@@ -6,8 +5,8 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-app.use(cors()); // Allows your React frontend to talk to this backend
-app.use(express.json()); // Allows Express to parse JSON bodies
+app.use(cors()); 
+app.use(express.json()); 
 
 // Import Routes
 const authRoutes = require('./routes/auth');

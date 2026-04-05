@@ -1,98 +1,91 @@
-
+// frontend/src/components/Auth.jsx
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function Auth() {
-    const navigate = useNavigate();
-  // State to toggle between Login and Register modes
-  const [isLogin, setIsLogin] = useState(true);
-  
-  // Form state
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState(''); // Only used for registration
-  const [error, setError] = useState('');
+    const [isLogin, setIsLogin] = useState(true);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(''); // Clear old errors
+    // Form state
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState(''); // Only used for registration
+    const [error, setError] = useState('');
 
-    // Determine the correct endpoint based on mode
-    const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
-    
-    // Build the payload (only send username if registering)
-    const payload = isLogin 
-      ? { email, password } 
-      : { username, email, password };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError(''); 
 
-    try {
-      const response = await axios.post(`http://localhost:5000${endpoint}`, payload);
-      
-      // Success! The backend gave us the token and user data.
-      const { token, user } = response.data;
-      
-      // Save the token to the browser's Local Storage
-      localStorage.setItem('token', token);
-      
-      navigate('/dashboard');
-      
-      // Later, you will redirect to a Dashboard here
-      
-    } catch (err) {
-      // Show the error message sent from the backend
-      setError(err.response?.data?.error || 'An error occurred');
-    }
-  };
+        const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
 
-  return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-      <h2>{isLogin ? 'Login to coach.gg' : 'Create an Account'}</h2>
-      
-      {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+        const payload = isLogin
+            ? { email, password }
+            : { username, email, password };
 
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        
-        {!isLogin && (
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            style={{ padding: '8px' }}
-          />
-        )}
+        try {
+            const response = await axios.post(`http://localhost:5000${endpoint}`, payload);
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          style={{ padding: '8px' }}
-        />
+            // Success! 
+            const { token, user } = response.data;
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          style={{ padding: '8px' }}
-        />
+            localStorage.setItem('token', token);
 
-        <button type="submit" style={{ padding: '10px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
-          {isLogin ? 'Login' : 'Sign Up'}
-        </button>
-      </form>
+            navigate('/dashboard');
 
-      <button 
-        onClick={() => setIsLogin(!isLogin)} 
-        style={{ marginTop: '15px', background: 'none', border: 'none', color: '#007bff', textDecoration: 'underline', cursor: 'pointer', padding: 0 }}
-      >
-        {isLogin ? 'Need an account? Sign up' : 'Already have an account? Login'}
-      </button>
-    </div>
-  );
+
+        } catch (err) {
+            setError(err.response?.data?.error || 'An error occurred');
+        }
+    };
+
+    return (
+        <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
+            <h2>{isLogin ? 'Login to coach.gg' : 'Create an Account'}</h2>
+
+            {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+
+                {!isLogin && (
+                    <input
+                        type="text"
+                        placeholder="Username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                        style={{ padding: '8px' }}
+                    />
+                )}
+
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    style={{ padding: '8px' }}
+                />
+
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    style={{ padding: '8px' }}
+                />
+
+                <button type="submit" style={{ padding: '10px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+                    {isLogin ? 'Login' : 'Sign Up'}
+                </button>
+            </form>
+
+            <button
+                onClick={() => setIsLogin(!isLogin)}
+                style={{ marginTop: '15px', background: 'none', border: 'none', color: '#007bff', textDecoration: 'underline', cursor: 'pointer', padding: 0 }}
+            >
+                {isLogin ? 'Need an account? Sign up' : 'Already have an account? Login'}
+            </button>
+        </div>
+    );
 }
