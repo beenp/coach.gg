@@ -1,3 +1,4 @@
+// frontend/src/App.jsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Auth from './components/Auth';
 import Dashboard from './components/Dashboard';
