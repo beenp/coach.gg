@@ -2,7 +2,7 @@
 const express = require('express');
 const { google } = require('googleapis');
 const db = require('../db');
-const auth = require('../middleware/authMiddleware'); 
+const {auth} = require('../middleware/auth'); 
 
 const router = express.Router();
 
@@ -43,28 +43,14 @@ router.get('/auth/google/callback', async (req, res) => {
     const { tokens } = await oauth2Client.getToken(code);
     const tokensString = JSON.stringify(tokens);
 
-    const coachCheck = await db.query('SELECT * FROM coaches WHERE user_id = $1', [userId]);
+    // Save the token to the USERS table, not the coaches table
+    await db.query('UPDATE users SET gcal_token = $1 WHERE id = $2', [tokensString, userId]);
 
-    if (coachCheck.rows.length === 0) {
-      await db.query(
-        'INSERT INTO coaches (user_id, hourly_rate, gcal_token) VALUES ($1, $2, $3)',
-        [userId, 25.00, tokensString] 
-      );
-
-      await db.query("UPDATE users SET role = 'coach' WHERE id = $1", [userId]);
-    } else {
-      await db.query(
-        'UPDATE coaches SET gcal_token = $1 WHERE user_id = $2',
-        [tokensString, userId]
-      );
-    }
-    //Redirects back to frontend on success
     res.redirect('http://localhost:5173/dashboard?sync=success');
-
   } catch (err) {
     console.error('Error exchanging code for tokens:', err);
     res.redirect('http://localhost:5173/dashboard?sync=failed');
   }
-});
+})
 
 module.exports = router;

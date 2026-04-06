@@ -5,8 +5,18 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-app.use(cors()); 
+app.use(cors());
+const webhookRoutes = require('./routes/webhook');
+app.use('/api/webhook', express.raw({ type: 'application/json' }), webhookRoutes); 
 app.use(express.json()); 
+
+// Stripe Routes
+const stripeRoutes = require('./routes/stripe');
+app.use('/api/stripe', stripeRoutes);
+
+// Public routes
+const publicRoutes = require('./routes/public');
+app.use('/api/public', publicRoutes);
 
 // Import Routes
 const authRoutes = require('./routes/auth');
@@ -17,13 +27,25 @@ app.use('/api/users', userRoutes);
 const calendarRoutes = require('./routes/calendar');
 app.use('/api/calendar', calendarRoutes);
 
-// Mount Routes
+// Session routes
+const sessionRoutes = require('./routes/sessions');
+app.use('/api/sessions', sessionRoutes);
+
+// Mount routes
 app.use('/api/auth', authRoutes);
 
 // Basic health check route
 app.get('/', (req, res) => {
   res.send('coach.gg API is running');
 });
+
+// Review routes
+const reviewRoutes = require('./routes/reviews');
+app.use('/api/reviews', reviewRoutes);
+
+// Admin routes
+const adminRoutes = require('./routes/admin');
+app.use('/api/admin', adminRoutes);
 
 // Start Server
 const PORT = process.env.PORT || 5000;

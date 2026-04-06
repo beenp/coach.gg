@@ -1,9 +1,10 @@
-// frontend/src/components/Auth.jsx
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+
 
 export default function Auth() {
+    const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(true);
 
     // Form state
@@ -34,6 +35,7 @@ export default function Auth() {
 
 
         } catch (err) {
+            console.error("THE EXACT ERROR IS:", err);
             setError(err.response?.data?.error || 'An error occurred');
         }
     };
