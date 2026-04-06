@@ -3,6 +3,7 @@ import axios from 'axios';
 import { supabase } from '../supabaseClient';
 
 export default function AdminDashboard() {
+    const API_URL = import.meta.env.VITE_API_URL;
     const [stats, setStats] = useState(null);
     const [newGame, setNewGame] = useState('');
     const [description, setDescription] = useState('');
@@ -18,10 +19,10 @@ export default function AdminDashboard() {
                 const token = localStorage.getItem('token');
                 const config = { headers: { Authorization: `Bearer ${token}` } };
 
-                const statsRes = await axios.get('http://localhost:5000/api/admin/stats', config);
+                const statsRes = await axios.get(`${API_URL}/api/admin/stats`, config);
                 setStats(statsRes.data);
 
-                const appsRes = await axios.get('http://localhost:5000/api/admin/applications', config);
+                const appsRes = await axios.get(`${API_URL}/api/admin/applications`, config);
                 setApplications(appsRes.data);
 
             } catch (err) {
@@ -35,7 +36,7 @@ export default function AdminDashboard() {
             try {
                 const token = localStorage.getItem('token');
                 // Ensure this endpoint exists on your backend!
-                const res = await axios.get('http://localhost:5000/api/admin/coaches', {
+                const res = await axios.get(`${API_URL}/api/admin/coaches`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setAllCoaches(res.data);
@@ -97,7 +98,7 @@ export default function AdminDashboard() {
 
         try {
             const token = localStorage.getItem('token');
-            await axios.put(`http://localhost:5000/api/admin/applications/${appId}`,
+            await axios.put(`${API_URL}/api/admin/applications/${appId}`,
                 { action },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

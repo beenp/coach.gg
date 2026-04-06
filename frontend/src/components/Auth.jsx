@@ -6,6 +6,7 @@ import axios from 'axios';
 export default function Auth() {
     const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(true);
+    const API_URL = import.meta.env.VITE_API_URL;
 
     // Form state
     const [email, setEmail] = useState('');
@@ -24,7 +25,7 @@ export default function Auth() {
             : { username, email, password };
 
         try {
-            const response = await axios.post(`http://localhost:5000${endpoint}`, payload);
+            const response = await axios.post(`${API_URL}${endpoint}`, payload);
 
             // Success! 
             const { token, user } = response.data;

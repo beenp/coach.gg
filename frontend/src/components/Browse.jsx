@@ -6,11 +6,12 @@ export default function Browse() {
   const [games, setGames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/public/games');
+        const res = await axios.get(`${API_URL}/api/public/games`);
         setGames(res.data);
       } catch (err) {
         console.error('Failed to load games catalog:', err);

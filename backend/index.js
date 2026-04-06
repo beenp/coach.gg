@@ -5,11 +5,10 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-app.use(cors({
-  origin: process.env.FRONTEND_URL, 
-  credentials: true, // Required if you are sending cookies/authorization headers
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
-}));
+app.use(cors());
+const webhookRoutes = require('./routes/webhook');
+app.use('/api/webhook', express.raw({ type: 'application/json' }), webhookRoutes); 
+app.use(express.json()); 
 
 // Stripe Routes
 const stripeRoutes = require('./routes/stripe');

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function Dashboard() {
+    const API_URL = import.meta.env.VITE_API_URL;
     const [reviewData, setReviewData] = useState({ sessionId: null, rating: 5, comment: '' });
     const [user, setUser] = useState(null);
     const [coachStatus, setCoachStatus] = useState(null);
@@ -19,18 +20,18 @@ export default function Dashboard() {
 
             try {
                 // Fetch User Data
-                const userRes = await axios.get('http://localhost:5000/api/users/me', {
+                const userRes = await axios.get(`${API_URL}/api/users/me`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUser(userRes.data);
 
                 // Fetch Coach / Calendar Status
-                const statusRes = await axios.get('http://localhost:5000/api/users/me/coach-status', {
+                const statusRes = await axios.get(`${API_URL}/api/users/me/coach-status`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setCoachStatus(statusRes.data); // Save it to state
                 
-                const sessionRes = await axios.get('http://localhost:5000/api/sessions/me', {
+                const sessionRes = await axios.get(`${API_URL}/api/sessions/me`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setSessions(sessionRes.data);
@@ -55,7 +56,7 @@ export default function Dashboard() {
     const handleConnectCalendar = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:5000/api/calendar/connect', {
+            const response = await axios.get(`${API_URL}/api/calendar/connect`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -70,7 +71,7 @@ export default function Dashboard() {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            await axios.post('http://localhost:5000/api/reviews', {
+            await axios.post(`${API_URL}/api/reviews`, {
                 sessionId: reviewData.sessionId,
                 coachId: coachId,
                 rating: reviewData.rating,
@@ -89,7 +90,7 @@ export default function Dashboard() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/users/become-coach', 
+      await axios.post(`${API_URL}/api/users/become-coach`, 
         { hourlyRate }, 
         { headers: { Authorization: `Bearer ${token}` } }
       );

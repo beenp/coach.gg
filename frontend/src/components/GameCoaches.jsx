@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
 export default function GameCoaches() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const { id } = useParams();
   const navigate = useNavigate();
   const [coaches, setCoaches] = useState([]);
@@ -11,7 +12,7 @@ export default function GameCoaches() {
   useEffect(() => {
     const fetchFilteredCoaches = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/public/games/${id}/coaches`);
+        const res = await axios.get(`${API_URL}/api/public/games/${id}/coaches`);
         setCoaches(res.data);
         if (res.data.length > 0) setGameName(res.data[0].game_name);
       } catch (err) {

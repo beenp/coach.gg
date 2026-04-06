@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function CoachProfile() {
+   const API_URL = import.meta.env.VITE_API_URL;
     const { id } = useParams(); // Grabs the coach ID from the URL
     const navigate = useNavigate();
 
@@ -23,9 +24,9 @@ export default function CoachProfile() {
         const fetchProfileData = async () => {
             try {
                 const [coachRes, gamesRes, reviewsRes] = await Promise.all([
-                    axios.get(`http://localhost:5000/api/public/coaches/${id}`),
-                    axios.get('http://localhost:5000/api/public/games'),
-                    axios.get(`http://localhost:5000/api/reviews/coach/${id}`)
+                    axios.get(`${API_URL}/api/public/coaches/${id}`),
+                    axios.get(`${API_URL}/api/public/games`),
+                    axios.get(`${API_URL}/reviews/coach/${id}`)
                 ]);
 
                 setCoach(coachRes.data);
@@ -47,7 +48,7 @@ export default function CoachProfile() {
             setSelectedTime(''); // Reset time when date changes
 
             try {
-                const res = await axios.get(`http://localhost:5000/api/public/coaches/${id}/availability?date=${selectedDate}`);
+                const res = await axios.get(`${API_URL}/api/public/coaches/${id}/availability?date=${selectedDate}`);
                 setAvailableSlots(res.data);
             } catch (err) {
                 console.error('Failed to fetch availability', err);
@@ -73,7 +74,7 @@ export default function CoachProfile() {
             const startDateTime = new Date(selectedTime);
             const endDateTime = new Date(startDateTime.getTime() + 3600000);
 
-            const response = await axios.post('http://localhost:5000/api/stripe/create-checkout-session', {
+            const response = await axios.post(`${API_URL}/api/stripe/create-checkout-session`, {
                 coachId: id,
                 gameId: selectedGame,
                 startTime: startDateTime.toISOString(),

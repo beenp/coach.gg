@@ -5,6 +5,7 @@ import { supabase } from '../supabaseClient';
 
 export default function ApplyCoach() {
   const [games, setGames] = useState([]);
+  const API_URL = import.meta.env.VITE_API_URL;
   
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -18,13 +19,13 @@ export default function ApplyCoach() {
   
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/public/games').then(res => setGames(res.data));
+    axios.get(`${API_URL}/api/public/games`).then(res => setGames(res.data));
     
     // check Application Status
     const checkStatus = async () => {
       const token = localStorage.getItem('token');
       if (token) {
-        const res = await axios.get('http://localhost:5000/api/users/me/coach-status', {
+        const res = await axios.get(`${API_URL}/api/users/me/coach-status`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.data.hasPendingApplication) {
@@ -37,7 +38,7 @@ export default function ApplyCoach() {
 
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/public/games').then(res => setGames(res.data));
+    axios.get(`${API_URL}/api/public/games`).then(res => setGames(res.data));
   }, []);
 
 const isAllowedType = (file) => {
@@ -77,7 +78,7 @@ const handleSubmit = async (e) => {
         // 4. Send the application data to your Express Backend
         const token = localStorage.getItem('token');
         
-        await axios.post('http://localhost:5000/api/users/apply', {
+        await axios.post(`${API_URL}/api/users/apply`, {
             gameId: selectedGame,
             certificationUrl: publicUrlData.publicUrl,
             fullName,

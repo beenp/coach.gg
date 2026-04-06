@@ -5,6 +5,7 @@ import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
   const [user, setUser] = useState(null);
   const token = localStorage.getItem('token');
   const [coachStatus, setCoachStatus] = useState(null);
@@ -14,7 +15,7 @@ export default function Navbar() {
     if (token) {
       const fetchUser = async () => {
         try {
-          const res = await axios.get('http://localhost:5000/api/users/me/coach-status', {
+          const res = await axios.get(`${API_URL}/api/users/me/coach-status`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           setUser(res.data); // This gives us { username, role, isCoach, etc }

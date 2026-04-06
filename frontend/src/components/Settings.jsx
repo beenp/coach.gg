@@ -17,7 +17,7 @@ export default function Settings() {
 
     useEffect(() => {
         const fetchGames = async () => {
-            const res = await axios.get('http://localhost:5000/api/public/games');
+            const res = await axios.get(`${API_URL}/api/public/games`);
             setGames(res.data);
         };
         fetchGames();
@@ -28,7 +28,7 @@ export default function Settings() {
             if (!token) return navigate('/');
 
             try {
-                const res = await axios.get('http://localhost:5000/api/users/me/coach-status', {
+                const res = await axios.get(`${API_URL}/api/users/me/coach-status`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
@@ -66,7 +66,7 @@ export default function Settings() {
     const handleSave = async () => {
         try {
             const token = localStorage.getItem('token');
-            await axios.put('http://localhost:5000/api/users/me/availability',
+            await axios.put(`${API_URL}/api/users/me/availability`,
                 { availability, timezone, gameId: selectedGameId, hourlyRate },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
